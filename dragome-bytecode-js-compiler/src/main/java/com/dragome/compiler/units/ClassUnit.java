@@ -687,7 +687,20 @@ public class ClassUnit extends Unit
 	{
 		if (classFile == null)
 		{
-			classFile= DragomeJsCompiler.compiler.fileManager.getFileForInput(getSignature().toString().replaceAll("\\.", "/") + ".class");
+			String string = getSignature().toString();
+//			string = string.replace("[L", "");
+//			string = string.replace(";", "");
+//			string = string.replaceAll("\\.", "/") + ".class";
+			if(string.endsWith(".class"))
+			{
+				string = string.substring(0, string.length() - 6);
+			}
+			string = string.replace(".", "\\") + ".class";
+			
+			if(string.contains("DragomeNet$Header")) {
+				System.out.println();
+			}
+			classFile= DragomeJsCompiler.compiler.fileManager.getFileForInput(string);
 		}
 		return classFile;
 	}

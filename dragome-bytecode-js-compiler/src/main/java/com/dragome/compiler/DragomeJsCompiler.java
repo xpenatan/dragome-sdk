@@ -40,6 +40,7 @@ import com.dragome.commons.compiler.BytecodeTransformer;
 import com.dragome.commons.compiler.annotations.CompilerType;
 import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
+import com.dragome.commons.custom.MyClass;
 import com.dragome.compiler.generators.AbstractVisitor;
 import com.dragome.compiler.generators.DragomeJavaScriptGenerator;
 import com.dragome.compiler.units.ClassUnit;
@@ -230,6 +231,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//		System.out.println((char) 27 + "[01;32m;This text is green." + (char) 27 + "[00;00m");
 
 		fileManager= new FileManager(classpath, classpathFilter);
+//		fileManager= new FileManager(classpath, null);
 		//	Project.singleton= null; //TODO revisar esto, impide cacheo!!
 		Project project= Project.createSingleton(getCacheFile());
 		assembly.setProject(project);
@@ -238,9 +240,13 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		//	generator= new JavaScriptGenerator(project);
 
 		errorCount= 0;
-
-		Collection<String> allFilesInClasspath= fileManager.getAllFilesInClasspath();
-		for (String file : allFilesInClasspath)
+		Collection<String> allFilesInClasspath2 = null;
+		if(MyClass.files != null)
+			allFilesInClasspath2 = MyClass.files;
+		else
+			allFilesInClasspath2= fileManager.getAllFilesInClasspath();
+		
+		for (String file : allFilesInClasspath2)
 		{
 			assembly.resolveNoTainting(file.replace(File.separator, ".").replace("/", "."));
 		}

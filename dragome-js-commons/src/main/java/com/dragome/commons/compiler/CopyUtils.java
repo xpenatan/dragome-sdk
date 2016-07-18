@@ -10,9 +10,12 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;;
+import java.util.jar.JarOutputStream;
+
+import com.dragome.commons.custom.MyClass;;
 
 public class CopyUtils
 {
@@ -67,9 +70,21 @@ public class CopyUtils
 			{
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 				{
-					InputStream inputStream= Files.newInputStream(file);
 					String string= fileClassPathEntry.toPath().relativize(file).toString();
-					addEntryToJar(jos, inputStream, string);
+					
+					if(MyClass.files != null){
+						boolean contains = MyClass.files.contains(string.replace(".class", ""));
+						if(contains || string.contains(".class") == false) 
+						{
+							InputStream inputStream= Files.newInputStream(file);
+							addEntryToJar(jos, inputStream, string);
+						}
+					}
+					else
+					{
+						InputStream inputStream= Files.newInputStream(file);
+						addEntryToJar(jos, inputStream, string);
+					}
 
 					return FileVisitResult.CONTINUE;
 				}

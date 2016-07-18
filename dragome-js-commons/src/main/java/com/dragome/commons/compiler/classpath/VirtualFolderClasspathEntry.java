@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.jar.JarOutputStream;
 
 import com.dragome.commons.compiler.CopyUtils;
+import com.dragome.commons.custom.MyClass;
 
 public class VirtualFolderClasspathEntry implements ClasspathEntry
 {
@@ -32,8 +33,11 @@ public class VirtualFolderClasspathEntry implements ClasspathEntry
 		for (ClasspathFile classpathFile : classpathFiles)
 		{
 			File file= new File(classpathFile.getPath());
-			if (classpathFilter == null || classpathFilter.accept(file, new File(".")))
+			if (classpathFilter == null || classpathFilter.accept(file, new File("."))) {
+				
 				files.add(classpathFile.getPath().replace(".class", ""));
+//				files.add(classpathFile.getPath());
+			}
 		}
 
 		return files;
@@ -41,8 +45,16 @@ public class VirtualFolderClasspathEntry implements ClasspathEntry
 
 	public void copyFilesToJar(JarOutputStream jos)
 	{
-		for (ClasspathFile classpathFile : classpathFiles)
-			CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));
+		for (ClasspathFile classpathFile : classpathFiles) {
+			if(MyClass.files != null){ 
+				String path = classpathFile.getPath();
+				boolean contains = MyClass.files.contains(path.replace(".class", ""));
+				if(contains || path.contains(".class") == false)
+					CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));
+			}
+			else
+				CopyUtils.addEntryToJar(jos, classpathFile.openInputStream(), classpathFile.getFilename().replace(".class", ""));
+		}
 	}
 
 	public String getName()

@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarOutputStream;
@@ -28,6 +31,7 @@ import com.dragome.commons.compiler.classpath.Classpath;
 import com.dragome.commons.compiler.classpath.ClasspathEntry;
 import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.commons.compiler.classpath.JarClasspathEntry;
+import com.dragome.commons.custom.MyClass;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
 import com.dragome.view.VisualActivity;
@@ -58,8 +62,8 @@ public class DragomeCompilerLauncher
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
 		classPath.addEntries(extraClasspath);
 
-		if (configurator.isRemoveUnusedCode())
-			classPath= optimize(classPath, serviceLocator, configurator);
+		
+		classPath= optimize(classPath, serviceLocator, configurator);
 
 		classPath.addEntries(extraClasspath);
 
@@ -68,21 +72,36 @@ public class DragomeCompilerLauncher
 		bytecodeToJavascriptCompiler.compile();
 	}
 
+	
 	private static Classpath optimize(Classpath classPath, ServiceLocator serviceLocator, DragomeConfigurator configurator)
 	{
 		try
 		{
 			File file= File.createTempFile("dragome-merged-", ".jar");
 			file.deleteOnExit();
-
+			ClasspathFileFilter classpathFilter = configurator.getClasspathFilter();
+			
+			MyClass.files = new ArrayList<>();
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
 				List<ClasspathEntry> entries= classPath.getEntries();
-				for (ClasspathEntry classpathEntry : entries)
+				for (ClasspathEntry classpathEntry : entries) {
+					List<String> allFilesNamesFiltering = classpathEntry.getAllFilesNamesFiltering(classpathFilter);
+					MyClass.files.addAll(allFilesNamesFiltering);
 					classpathEntry.copyFilesToJar(jos);
+				}
 			}
-
-			return runProguard(file, configurator);
+			if (configurator.isRemoveUnusedCode())
+			{
+				return runProguard(file, configurator);
+			}
+			else
+			{
+					
+				ClasspathEntry createFromPath = JarClasspathEntry.createFromPath(file.getAbsolutePath());
+				Classpath classpath2 = new Classpath(createFromPath);
+				return classpath2;
+			}
 		}
 		catch (Exception e)
 		{
