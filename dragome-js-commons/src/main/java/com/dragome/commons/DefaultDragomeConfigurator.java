@@ -18,6 +18,7 @@ package com.dragome.commons;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -33,6 +34,7 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	private CompilerType defaultCompilerType= CompilerType.Standard;
 	private ClasspathFileFilter classpathFilter;
 	private boolean removeUnusedCode;
+	private boolean obfuscateCode;
 
 	public ClassLoader getNewClassloaderInstance(ClassLoader parent, ClassLoader current)
 	{
@@ -147,13 +149,23 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 		return removeUnusedCode;
 	}
 
+	public boolean isObfuscateCode()
+	{
+		return obfuscateCode;
+	}
+
 	public void sortClassPath(Classpath classPath)
 	{
 	}
 
-	public URL getAdditionalCodeKeepConfigFile()
+	public List<URL> getAdditionalCodeKeepConfigFile()
 	{
-		return null;
+		return new ArrayList<URL>();
+	}
+
+	public List<URL> getAdditionalObfuscateCodeKeepConfigFile()
+	{
+		return new ArrayList<URL>();
 	}
 
 	public boolean isCaching() {
@@ -163,5 +175,10 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	public String getCompiledPath()
 	{
 		return null;
+	}
+
+	public boolean isFailOnError()
+	{
+		return false;
 	}
 }

@@ -11,6 +11,7 @@
   <properties>
     <dragome.version>0.96-beta4</dragome.version>
     <skip.gpg>true</skip.gpg>
+	<maven.javadoc.skip>true</maven.javadoc.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -41,7 +42,7 @@
     <repository>
       <id>dragome</id>
       <name>dragome</name>
-      <url>https://raw.github.com/dragome/dragome/master/maven</url>
+      <url>https://repo.enonic.com/public</url>
     </repository>
   </repositories>
 
@@ -87,12 +88,12 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon</artifactId>
-      <version>9</version>
+      <version>9.1.0.8</version>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-jdom</artifactId>
-      <version>9</version>
+      <version>9.1.0.8</version>
     </dependency>
     <dependency>
  			<groupId>org.apache.bcel</groupId>

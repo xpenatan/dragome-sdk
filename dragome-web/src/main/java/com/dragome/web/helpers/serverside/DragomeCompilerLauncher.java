@@ -12,7 +12,9 @@ package com.dragome.web.helpers.serverside;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URI;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,6 +43,7 @@ import com.dragome.web.helpers.DefaultClasspathFileFilter;
 
 import proguard.Configuration;
 import proguard.ConfigurationParser;
+import proguard.ParseException;
 import proguard.ProGuard;
 
 public class DragomeCompilerLauncher
@@ -61,12 +64,12 @@ public class DragomeCompilerLauncher
 
 		BytecodeToJavascriptCompiler bytecodeToJavascriptCompiler= WebServiceLocator.getInstance().getBytecodeToJavascriptCompiler();
 
-		configurator.sortClassPath(classPath);
-		classPath= process(classPath, configurator);
 		List<ClasspathEntry> extraClasspath= configurator.getExtraClasspath(classPath);
 		classPath.addEntries(extraClasspath);
+		configurator.sortClassPath(classPath);
+		classPath= process(classPath, configurator);
 
-		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, classpathFilter, configurator.isCheckingCast(), configurator.isCaching());
+		BytecodeToJavascriptCompilerConfiguration compilerConfiguration= new BytecodeToJavascriptCompilerConfiguration(classPath, target, mainClassName, defaultCompilerType, bytecodeTransformer, new DefaultClasspathFileFilter(), configurator.isCheckingCast(), configurator.isCaching(), configurator.isFailOnError());
 		bytecodeToJavascriptCompiler.configure(compilerConfiguration);
 		bytecodeToJavascriptCompiler.compile();
 	}
@@ -84,39 +87,52 @@ public class DragomeCompilerLauncher
 			Files.createDirectories(tmpPath);
 			File file= Files.createTempFile(tmpPath, "dragome-merged-", ".jar").toFile();
 			file.deleteOnExit();
-			path= file.getAbsolutePath();
 
 			try (JarOutputStream jos= new JarOutputStream(new FileOutputStream(file)))
 			{
+				final ArrayList<String> keepClass= new ArrayList<>();
+				final ClasspathFileFilter classpathFilter= configurator.getClasspathFilter();
 				List<ClasspathEntry> entries= classPath.getEntries();
 				for (ClasspathEntry classpathEntry : entries)
+				{
 					classpathEntry.copyFilesToJar(jos, new DefaultClasspathFileFilter()
 					{
-						private ArrayList<String> keepClass= new ArrayList<>();
-
 						public boolean accept(ClasspathFile classpathFile)
 						{
 							boolean result= super.accept(classpathFile);
 
 							String entryName= classpathFile.getPath();
+							entryName= entryName.replace("\\", "/");
+
 							if (!keepClass.contains(entryName))
 							{
 								keepClass.add(entryName);
 
 								if (entryName.endsWith(".js") || entryName.endsWith(".class") || entryName.contains("MANIFEST") || entryName.contains(".html") || entryName.contains(".css"))
 									result&= true;
+
+								if (classpathFilter != null)
+									result&= classpathFilter.accept(classpathFile);
 							}
+							else
+								result= false;
 							return result;
 						}
 					});
+				}
 			}
-
 			if (configurator.isRemoveUnusedCode())
 			{
-				return runProguard(file, configurator);
+				file= executeProguard(file, "/proguard.conf", "-proguard.jar", configurator.getAdditionalCodeKeepConfigFile(), false);
+				file.deleteOnExit();
 			}
-			else
-				return new Classpath(JarClasspathEntry.createFromPath(path));
+			if (configurator.isObfuscateCode())
+			{
+				file= executeProguard(file, "/proguardObf.conf", "-Obf.jar", configurator.getAdditionalObfuscateCodeKeepConfigFile(), true);
+				file.deleteOnExit();
+			}
+			path= file.getAbsolutePath();
+			return new Classpath(JarClasspathEntry.createFromPath(path));
 		}
 		catch (Exception e)
 		{
@@ -124,26 +140,33 @@ public class DragomeCompilerLauncher
 		}
 	}
 
-	private static Classpath runProguard(File file, DragomeConfigurator configurator) throws Exception
+	private static File executeProguard(File inputFile, String name, String replacement, List<URL> additionalUrls, boolean addToClasspath) throws MalformedURLException, URISyntaxException, IOException, ParseException
 	{
-		URI uri= DragomeCompilerLauncher.class.getResource("/proguard.conf").toURI();
+		String outFilename= inputFile.getAbsolutePath().replace(".jar", replacement);
+		File outputFile= new File(outFilename);
+
 		Properties properties= System.getProperties();
-		properties.put("in-jar-filename", file.getAbsolutePath());
-		String outFilename= file.getAbsolutePath().replace(".jar", "-proguard.jar");
-		new File(outFilename).deleteOnExit();
-		properties.put("out-jar-filename", outFilename);
-		ConfigurationParser parser= new ConfigurationParser(uri.toURL(), properties);
-		URL additionalCodeKeepConfigFile= configurator.getAdditionalCodeKeepConfigFile();
+		properties.put("in-jar-filename", inputFile.getAbsolutePath());
+		properties.put("out-jar-filename", outputFile.getAbsolutePath());
+
+		ConfigurationParser parser= new ConfigurationParser(DragomeCompilerLauncher.class.getResource(name).toURI().toURL(), properties);
 		Configuration configuration= new Configuration();
+
 		parser.parse(configuration);
 
-		if (additionalCodeKeepConfigFile != null)
+		ArrayList<URL> urls= new ArrayList<URL>(additionalUrls);
+
+		for (URL url : urls)
 		{
-			ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(additionalCodeKeepConfigFile, properties);
+			ConfigurationParser parserForAdditionalKeepCodeConfigFile= new ConfigurationParser(url, properties);
 			parserForAdditionalKeepCodeConfigFile.parse(configuration);
 		}
 
+		if (addToClasspath)
+			System.setProperty("java.class.path", outFilename + ";" + System.getProperty("java.class.path"));
+
 		new ProGuard(configuration).execute();
-		return new Classpath(JarClasspathEntry.createFromPath(outFilename));
+
+		return outputFile;
 	}
 }

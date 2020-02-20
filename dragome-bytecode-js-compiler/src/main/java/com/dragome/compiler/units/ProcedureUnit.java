@@ -23,7 +23,7 @@ public abstract class ProcedureUnit extends MemberUnit
 	public ProcedureUnit(Signature theSignature, ClassUnit theDeclaringClazz, String nameAndSignature)
 	{
 		super(theSignature, theDeclaringClazz);
-		this.nameAndSignature = nameAndSignature;
+		this.nameAndSignature= nameAndSignature;
 	}
 
 	public void addTarget(Signature targetSignature)
@@ -46,12 +46,22 @@ public abstract class ProcedureUnit extends MemberUnit
 		}
 	}
 
-	public void write(int depth, Writer writer) throws IOException
+	public void write(int depth, Writer writer, String... annotationDefaultFound) throws IOException
 	{
-		if (getData() == null)
+		String data= getData();
+		if (data == null)
 			return;
 		Log.getLogger().debug(getIndent(depth) + getSignature());
-		writer.write(getData());
+
+		if (annotationDefaultFound.length > 0)
+		{
+			String data1= data.substring(0, data.length() - 1);
+			String defaultValue= annotationDefaultFound[0];
+			data1+= "return \"" + defaultValue + "\";\n}";
+			writer.write(data1);
+		}
+		else
+			writer.write(data);
 	}
 
 	public String getData()

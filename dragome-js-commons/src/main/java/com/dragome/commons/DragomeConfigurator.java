@@ -36,8 +36,11 @@ public interface DragomeConfigurator
 	public boolean isCheckingCast();
 	List<ClasspathEntry> getExtraClasspath(Classpath classPath);
 	boolean isRemoveUnusedCode();
+	boolean isObfuscateCode();
 	boolean isCaching();
 	String getCompiledPath();
 	public void sortClassPath(Classpath classPath);
-	URL getAdditionalCodeKeepConfigFile();
+	List<URL> getAdditionalCodeKeepConfigFile();
+	List<URL> getAdditionalObfuscateCodeKeepConfigFile();
+	public boolean isFailOnError();
 }

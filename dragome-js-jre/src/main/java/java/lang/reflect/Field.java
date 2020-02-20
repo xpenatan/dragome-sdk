@@ -17,8 +17,11 @@
 package java.lang.reflect;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import com.dragome.commons.javascript.ScriptHelper;
+
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 public final class Field extends AccessibleObject implements Member
 {
@@ -64,8 +67,13 @@ public final class Field extends AccessibleObject implements Member
 	{
 		ScriptHelper.put("obj", obj, this);
 		ScriptHelper.put("sig", this.signature, this);
+		Object result;
 
-		Object result= ScriptHelper.eval("obj[sig]", this);
+		if ((getModifiers() & Modifier.STATIC) != 0)
+			result= ScriptHelper.eval("obj.constructor[sig]", this);
+		else
+			result= ScriptHelper.eval("obj[sig]", this);
+		
 		return Method.adaptResult(result, getType());
 	}
 
@@ -80,7 +88,10 @@ public final class Field extends AccessibleObject implements Member
 		ScriptHelper.put("sig", this.signature, this);
 		ScriptHelper.put("value", tmpArray[0], this);
 
-		ScriptHelper.evalNoResult("obj[sig]= value", this);
+		if ((getModifiers() & Modifier.STATIC) != 0)
+			ScriptHelper.evalNoResult("obj.constructor[sig]= value", this);
+		else
+			ScriptHelper.evalNoResult("obj[sig]= value", this);
 	}
 
 	public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass)
@@ -90,7 +101,10 @@ public final class Field extends AccessibleObject implements Member
 
 	public Annotation[] getDeclaredAnnotations()
 	{
-		return null;
+		final List<Annotation> annotations= Class.getAnnotationsInternal(class1, null, null, getName());
+		final Annotation[] ret= new Annotation[annotations.size()];
+		annotations.toArray(ret);
+		return ret;
 	}
 
 	public boolean isSynthetic()
@@ -110,10 +124,15 @@ public final class Field extends AccessibleObject implements Member
 
 	public Type getGenericType()
 	{
-		//		if (getName() != null)
-		//			return getGenericInfo().getGenericType(); // TODO needs implementation.
-		//		else  
-		return getType();
+		Class<?> declaringClass= getDeclaringClass();
+		ScriptHelper.put("declaringClass", declaringClass, this);
+		if (ScriptHelper.evalBoolean("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures ", this))
+		{
+			String genericSignature= (String) ScriptHelper.eval("declaringClass.$$$nativeClass___java_lang_Object.$$$$signatures[this.$$$signature___java_lang_String]", this);
+			return new ParameterizedTypeImpl(genericSignature);
+		}
+		else
+			return getType();
 	}
 
 	public boolean equals(Object object)
@@ -123,17 +142,17 @@ public final class Field extends AccessibleObject implements Member
 
 	public boolean getBoolean(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (boolean)this.get(object);
+		return (boolean) this.get(object);
 	}
 
 	public byte getByte(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (byte)this.get(object);
+		return (byte) this.get(object);
 	}
 
 	public char getChar(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (char)this.get(object);
+		return (char) this.get(object);
 	}
 
 	public Class<?> getDeclaringClass()
@@ -143,34 +162,33 @@ public final class Field extends AccessibleObject implements Member
 
 	public double getDouble(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (double)this.get(object);
+		return (double) this.get(object);
 	}
 
 	public float getFloat(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (float)this.get(object);
+		return (float) this.get(object);
 	}
 
 	public int getInt(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (int)this.get(object);
+		return (int) this.get(object);
 	}
 
 	public long getLong(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (long)this.get(object);
+		return (long) this.get(object);
 	}
 
 	public short getShort(Object object) throws IllegalAccessException, IllegalArgumentException
 	{
-		return (short)this.get(object);
+		return (short) this.get(object);
 	}
 
 	public int getModifiers()
 	{
-		return 0;
+		return modifier;
 	}
-
 
 	native String getSignature();
 

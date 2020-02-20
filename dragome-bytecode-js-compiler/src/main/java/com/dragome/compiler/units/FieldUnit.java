@@ -14,7 +14,7 @@ public class FieldUnit extends MemberUnit
 		super(theSignature, theDeclaringClazz);
 	}
 
-	public void write(int depth, Writer writer) throws IOException
+	public void write(int depth, Writer writer, String... annotationDefaultFound) throws IOException
 	{
 		if (getData() == null)
 			return;

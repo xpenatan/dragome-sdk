@@ -23,12 +23,15 @@ import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junit.framework.TestCase;
 
 @RunWith(DragomeTestRunner.class)
-public class LambdaTests extends TestCase {
+public class LambdaTests extends TestCase
+{
+	@Test
 	public void test_empty_lambda() {
 		Runnable lambda = () -> {
 		};
@@ -36,7 +39,9 @@ public class LambdaTests extends TestCase {
 		lambda.run();
 	}
 
-	public void test_lambda_returning_a_value() throws Exception {
+	@Test
+	public void test_lambda_returning_a_value() throws Exception
+	{
 		Callable<String> lambda = () -> "some value";
 
 		assertEquals("some value", lambda.call());
@@ -46,7 +51,9 @@ public class LambdaTests extends TestCase {
 		OUT apply(IN value);
 	}
 
-	public void test_lambda_taking_parameters() {
+	@Test
+	public void test_lambda_taking_parameters()
+	{
 		Function1<String, Integer> lambda = (String s) -> s.getBytes().length;
 
 		assertEquals((Integer) 3, lambda.apply("foo"));
@@ -54,7 +61,9 @@ public class LambdaTests extends TestCase {
 
 	private int instanceVar = 0;
 
-	public void test_lambda_using_instance_variables() {
+	@Test
+	public void test_lambda_using_instance_variables()
+	{
 		Runnable lambda = () -> {
 			instanceVar = 42;
 		};
@@ -63,7 +72,9 @@ public class LambdaTests extends TestCase {
 		assertEquals(instanceVar, 42);
 	}
 
-	public void test_lambda_using_local_variables() {
+	@Test
+	public void test_lambda_using_local_variables()
+	{
 		int[] localVar = new int[1];
 		Runnable lambda = () -> {
 			localVar[0] = 42;
@@ -73,7 +84,9 @@ public class LambdaTests extends TestCase {
 		assertEquals(localVar[0], 42);
 	}
 
-	public void test_lambda_using_local_variables_of_primitive_types() throws Exception {
+	@Test
+	public void test_lambda_using_local_variables_of_primitive_types() throws Exception
+	{
 		boolean bool = true;
 		byte b = 2;
 		short s = 3;
@@ -88,14 +101,18 @@ public class LambdaTests extends TestCase {
 		assertEquals(call, (Integer) 36);
 	}
 
-	public void test_method_references_to_virtual_methods() throws Exception {
+	@Test
+	public void test_method_references_to_virtual_methods() throws Exception
+	{
 		String foo = "foo";
 		Callable<String> ref = foo::toUpperCase;
 
 		assertEquals(ref.call(), "FOO");
 	}
 
-	public void test_method_references_to_interface_methods() throws Exception {
+	@Test
+	public void test_method_references_to_interface_methods() throws Exception
+	{
 		List<String> foos = Arrays.asList("foo");
 		Callable<Integer> ref = foos::size;
 
@@ -103,43 +120,56 @@ public class LambdaTests extends TestCase {
 		assertEquals(result, (Integer) 1);
 	}
 
-	public void test_method_references_to_static_methods() throws Exception {
+	@Test
+	public void test_method_references_to_static_methods() throws Exception
+	{
 		long expected = System.currentTimeMillis();
 		Callable<Long> ref = System::currentTimeMillis;
 
 		assertTrue(ref.call() >= expected);
 	}
 
-	public void test_method_references_to_constructors() throws Exception {
+	@Test
+	public void test_method_references_to_constructors() throws Exception
+	{
 		Callable<List<String>> ref = ArrayList<String>::new;
 
 		assertTrue(ref.call() instanceof ArrayList);
 	}
 
-	class SuperClass {
-		String inheritedMethod() {
+	class SuperClass
+	{
+		String inheritedMethod()
+		{
 			return "superclass version";
 		}
 	}
 
-	public class SubClass extends SuperClass {
-		private String t1() throws Exception {
+	public class SubClass extends SuperClass
+	{
+		private String t1() throws Exception
+		{
 			Callable<String> ref = super::inheritedMethod;
 			return ref.call();
 		}
 	}
 
-	public void test_method_references_to_overridden_inherited_methods_with_super() throws Exception {
+	@Test
+	public void test_method_references_to_overridden_inherited_methods_with_super() throws Exception
+	{
 		SubClass subClass = new SubClass();
 
 		assertEquals(subClass.t1(), "superclass version");
 	}
 
-	String inheritedMethod() {
+	String inheritedMethod()
+	{
 		return "overridden version";
 	}
 
-	public void test_method_references_to_private_methods() throws Exception {
+	@Test
+	public void test_method_references_to_private_methods() throws Exception
+	{
 		Callable<String> ref1 = LambdaTests::privateClassMethod;
 		assertEquals(ref1.call(), "foo");
 
@@ -152,19 +182,24 @@ public class LambdaTests extends TestCase {
 		assertEquals(privateInstanceMethod(), "foo");
 	}
 
-	public class SomeEntity {
+	public class SomeEntity
+	{
 		protected String name;
 
-		public SomeEntity(String name) {
+		public SomeEntity(String name)
+		{
 			this.name = name;
 		}
 
-		public int compareTo(SomeEntity entity1) {
+		public int compareTo(SomeEntity entity1)
+		{
 			return name.compareTo(entity1.name);
 		}
 	}
 
-	public void test_method_reference_to_instance_comparator() throws Exception {
+	@Test
+	public void test_method_reference_to_instance_comparator() throws Exception
+	{
 		SomeEntity[] a = new SomeEntity[] { new SomeEntity("c"), new SomeEntity("a"), new SomeEntity("b") };
 
 		Arrays.sort(a, SomeEntity::compareTo);
@@ -174,15 +209,19 @@ public class LambdaTests extends TestCase {
 		assertEquals(a[2].name, "c");
 	}
 
-	private String privateInstanceMethod() {
+	private String privateInstanceMethod()
+	{
 		return "foo";
 	}
 
-	private static String privateClassMethod() {
+	private static String privateClassMethod()
+	{
 		return "foo";
 	}
 
-	public void testLambda_using_instance_variables() {
+	@Test
+	public void testLambda_using_instance_variables()
+	{
 		Runnable lambda = () -> {
 			instanceVar = 42;
 		};
@@ -191,7 +230,9 @@ public class LambdaTests extends TestCase {
 		assertEquals(instanceVar, 42);
 	}
 
-	public void testLambda_using_local_variables() {
+	@Test
+	public void testLambda_using_local_variables()
+	{
 		int[] localVar = new int[1];
 		Runnable lambda = () -> {
 			localVar[0] = 43;
@@ -201,14 +242,18 @@ public class LambdaTests extends TestCase {
 		assertEquals(localVar[0], 43);
 	}
 
-	public void testCreatingBinaryOperatorWithLambda() {
+	@Test
+	public void testCreatingBinaryOperatorWithLambda()
+	{
 		BinaryOperator<Integer> sum = (v1, v2) -> v1 + v2;
 		Integer result = sum.apply(1, 2);
 
 		assertEquals(new Integer(3), result);
 	}
 
-	public void testLambaFromLambda() {
+	@Test
+	public void testLambaFromLambda()
+	{
 		FileFilter[] filters = new FileFilter[] { f -> f.exists(), f -> f.canRead(), f -> f.getName().startsWith("q") };
 
 		Supplier<Runnable> c = () -> () -> {
@@ -220,7 +265,9 @@ public class LambdaTests extends TestCase {
 		assertEquals(80, instanceVar);
 	}
 
-	public void testNoParametersMethodReferenceAsLambda() {
+	@Test
+	public void testNoParametersMethodReferenceAsLambda()
+	{
 		String[] list = new String[] { "One", "Two", "Three", "Four", "Five", "Six" };
 
 		Comparator<String> upperComparator = Comparator.comparing(String::toUpperCase);
@@ -235,7 +282,9 @@ public class LambdaTests extends TestCase {
 		assertEquals(list[5], "Two");
 	}
 
-	public void testUseTwoParametersMethodReferenceAsComparator() {
+	@Test
+	public void testUseTwoParametersMethodReferenceAsComparator()
+	{
 		String[] list = new String[] { "One", "Two", "Three", "Four", "Five", "Six" };
 		Arrays.sort(list, (a, b) -> a.substring(1).compareTo(b.substring(1)));
 
@@ -247,7 +296,8 @@ public class LambdaTests extends TestCase {
 		assertEquals(list[5], "Two");
 	}
 
-	public static int compareFrom2(String a, String b) {
+	public static int compareFrom2(String a, String b)
+	{
 		return a.substring(1).compareTo(b.substring(1));
 	}
 
