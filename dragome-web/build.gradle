@@ -1,0 +1,44 @@
+plugins {
+	id 'java-library'
+	id 'maven-publish'
+}
+apply from: '../dependencies.gradle'
+
+sourceSets.main.java.srcDirs = [ "src/main/java/"]
+sourceSets.main.resources.srcDirs = ["src/main/resources/"]
+
+dependencies {
+	api "commons-logging:commons-logging:$project.commonsLoggingVersion"
+	api "ro.isdc.wro4j:wro4j-core:$project.wro4jCoreVersion"
+	api "org.apache.bcel:bcel:$project.bcelVersion"
+	api "javax.websocket:javax.websocket-api:$project.javaxWebsocketApiCoreVersion"
+	api "javax:javaee-web-api:$project.javaeeWebApiVersion"
+	api "javax.servlet:servlet-api:$project.servletApiVersion"
+	api "org.atmosphere:atmosphere-runtime:$project.atmosphereRuntimeVersion"
+	api "org.ow2.asm:asm-all:$project.asmVersion"
+	api "org.jdom:jdom:$project.jdomVersion"
+	api "javolution:javolution:$project.javolutionVersion"
+	api "net.sf.saxon:saxon:$project.saxonVersion"
+	api "net.sf.saxon:saxon-jdom:$project.saxonVersion"
+	api "net.jpountz.lz4:lz4:$project.lz4Version"
+	api "org.reflections:reflections:$project.reflectionsVersion"
+	api "org.javassist:javassist:$project.javassistVersion"
+	api "com.google.guava:guava:$project.guavaVersion"
+	api "net.sf.proguard:proguard-base:$project.proguardBaseVersion"
+	api "org.mockito:mockito-core:$project.mockitoCoreVersion"
+	api project(":dragome-js-commons")
+	api project(":dragome-core")
+	api project(":dragome-w3c-standards")
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.groupId
+			artifactId "dragome-web"
+			version project.dragomeVersion
+			from components.java
+		}
+	}
+}
+

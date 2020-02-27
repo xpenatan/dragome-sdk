@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+apply from: '../dependencies.gradle'
+
+sourceSets.main.java.srcDirs = [ "src/main/java/"]
+sourceSets.main.resources.srcDirs = ["src/main/resources/"]
+
+dependencies {
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.groupId
+            artifactId "dragome-w3c-standards"
+            version project.dragomeVersion
+            from components.java
+        }
+    }
+}

@@ -7,4 +7,16 @@ target/
 .launch
 .classpath
 .factorypath
-*.jar
+
+build/
+*.iml
+*.a
+/.idea/
+.idea/
+workspace.xml
+tasks.xml
+local.properties
+*.class
+out/
+.gradle/
+dist/

@@ -1,0 +1,1 @@
+include ":dragome-js-commons", ":dragome-bytecode-js-compiler", ":dragome-core", ":dragome-w3c-standards", ":dragome-web",":dragome-js-jre"

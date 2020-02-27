@@ -110,6 +110,17 @@ public final class Long
 	{
 		return (int) (value ^ (value >>> 32));
 	}
+
+	public static int numberOfLeadingZeros(long i) {
+		int low = (int) i;
+		if (low != 0)
+		{
+			return Integer.numberOfLeadingZeros(low);
+		} else
+		{
+			return Integer.numberOfLeadingZeros((int) (i >> 32)) + 32;
+		}
+	}
 	
 	public static int numberOfTrailingZeros(long i)
 	{

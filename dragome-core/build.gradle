@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+apply from: '../dependencies.gradle'
+
+sourceSets.main.java.srcDirs = [ "src/main/java/", "json/" ]
+
+dependencies {
+	api project(":dragome-js-commons")
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.groupId
+            artifactId "dragome-core"
+            version project.dragomeVersion
+            from components.java
+        }
+    }
+}

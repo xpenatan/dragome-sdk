@@ -1,0 +1,31 @@
+plugins {
+	id 'java-library'
+}
+apply from: '../dependencies.gradle'
+
+sourceSets.main.java.srcDirs = [ "src/main/java/", "src/main/strict-compiler-src/", "dx-src/" ]
+sourceSets.main.resources.srcDirs = [ "src/main/strict-compiler-src/"]
+
+dependencies {
+	api "io.netty:netty-codec:$project.nettyVersion"
+	api "net.jpountz.lz4:lz4:$project.lz4Version"
+	api "javolution:javolution:$project.javolutionVersion"
+	api "org.ow2.asm:asm-all:$project.asmVersion"
+	api "org.jdom:jdom:$project.jdomVersion"
+	api "net.sf.saxon:saxon:$project.saxonVersion"
+	api "net.sf.saxon:saxon-jdom:$project.saxonVersion"
+	api "org.apache.bcel:bcel:$project.bcelVersion"
+	api "commons-codec:commons-codec:$project.commonsCodecVersion"
+	api project(":dragome-js-commons")
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId project.groupId
+			artifactId "dragome-bytecode-js-compiler"
+			version project.dragomeVersion
+			from components.java
+		}
+	}
+}
