@@ -23,5 +23,5 @@ jobs:
     - name: Upload to repository
       run: ./gradlew publish
       env:
-        IMGUI_USER: ${{ secrets.USER }}
-        IMGUI_PASSWORD: ${{ secrets.PASSWORD }}
+        USER: ${{ secrets.USER }}
+        PASSWORD: ${{ secrets.PASSWORD }}
