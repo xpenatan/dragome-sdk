@@ -15,6 +15,7 @@ publishing {
             groupId project.groupId
             artifactId "dragome-w3c-standards"
             version project.dragomeVersion
+            project.version = project.dragomeVersion
             from components.java
         }
     }

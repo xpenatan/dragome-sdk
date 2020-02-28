@@ -21,6 +21,7 @@ publishing {
 			groupId project.groupId
 			artifactId "dragome-js-jre"
 			version project.dragomeVersion
+			project.version = project.dragomeVersion
 			from components.java
 		}
 	}
