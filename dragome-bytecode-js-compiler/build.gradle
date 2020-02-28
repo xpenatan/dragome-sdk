@@ -6,6 +6,11 @@ apply from: '../dependencies.gradle'
 sourceSets.main.java.srcDirs = [ "src/main/java/", "src/main/strict-compiler-src/", "dx-src/" ]
 sourceSets.main.resources.srcDirs = [ "src/main/strict-compiler-src/"]
 
+configurations {
+	provided
+	api.extendsFrom provided
+}
+
 dependencies {
 	api "io.netty:netty-codec:$project.nettyVersion"
 	api "net.jpountz.lz4:lz4:$project.lz4Version"
@@ -16,12 +21,21 @@ dependencies {
 	api "net.sf.saxon:saxon-jdom:$project.saxonVersion"
 	api "org.apache.bcel:bcel:$project.bcelVersion"
 	api "commons-codec:commons-codec:$project.commonsCodecVersion"
-	api project(":dragome-js-commons")
+	provided project(":dragome-js-commons")
 }
 
 task fromClasses (type: Jar) {
-	from (sourceSets.main.output){
+	from {
+		(configurations.runtimeClasspath - configurations.provided).collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
 	}
+			{
+				exclude "META-INF/*.SF"
+				exclude "META-INF/*.DSA"
+				exclude "META-INF/*.RSA"
+			}
+	with jar
 }
 
 task sourcesJar(type: Jar) {

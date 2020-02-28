@@ -11,8 +11,15 @@ dependencies {
 }
 
 task fromClasses (type: Jar) {
-    from (sourceSets.main.output){
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+            {
+                exclude "META-INF/*.SF"
+                exclude "META-INF/*.DSA"
+                exclude "META-INF/*.RSA"
+            }
+    with jar
 }
 
 task sourcesJar(type: Jar) {
