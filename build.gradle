@@ -39,6 +39,7 @@ allprojects {
         mavenLocal()
         jcenter()
         mavenCentral()
+        maven { url "https://repo.enonic.com/public" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
