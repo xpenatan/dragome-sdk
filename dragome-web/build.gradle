@@ -31,6 +31,16 @@ dependencies {
 	api project(":dragome-w3c-standards")
 }
 
+task fromClasses (type: Jar) {
+	from (sourceSets.main.output){
+	}
+}
+
+task sourcesJar(type: Jar) {
+	archiveClassifier.set('sources')
+	from sourceSets.main.allSource
+}
+
 publishing {
 	publications {
 		maven(MavenPublication) {
@@ -38,8 +48,8 @@ publishing {
 			artifactId "dragome-web"
 			version project.dragomeVersion
 			project.version = project.dragomeVersion
-			from components.java
+			artifact sourcesJar
+			artifact fromClasses
 		}
 	}
 }
-

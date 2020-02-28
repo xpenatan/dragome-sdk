@@ -1,5 +1,14 @@
 [![Join the chat at https://gitter.im/dragome-sdk/](https://badges.gitter.im/dragome-sdk.svg)](https://gitter.im/dragome-sdk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![Build](https://github.com/xpenatan/dragome-sdk/workflows/Build/badge.svg)
+
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-core?label=dragome-core&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-core~~~~kw,versionexpand)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-bytecode-js-compiler?label=dragome-bytecode-js-compiler&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-bytecode-js-compiler~~~~kw,versionexpand)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-web?label=dragome-web&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-web~~~~kw,versionexpand)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-w3c-standards?label=dragome-w3c-standards&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-w3c-standards~~~~kw,versionexpand)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-js-jre?label=dragome-js-jre&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-js-jre~~~~kw,versionexpand)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.xpenatan.dragome-sdk/dragome-js-commons?label=dragome-js-commons&server=https%3A%2F%2Foss.sonatype.org)](https://oss.sonatype.org/#nexus-search;gav~com.github.xpenatan.dragome-sdk~dragome-js-commons~~~~kw,versionexpand)
+
 # What is Dragome?
 Dragome is an open source tool for creating client side web applications in pure Java (JVM) language.  
 Based on bytecode to javascript compilation, you can execute applications written in Java directly on browsers.  
