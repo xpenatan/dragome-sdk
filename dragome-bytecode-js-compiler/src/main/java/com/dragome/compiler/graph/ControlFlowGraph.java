@@ -180,6 +180,26 @@ public class ControlFlowGraph extends Graph
 		}
 	}
 
+	/**
+	 *  processTrys2 is generating a bug with the code below. It loops for ever.
+	 * 	public static int loopTest() {
+	 * 		int count = 0;
+	 * 		boolean flag = true;
+	 * 		try {
+	 * 			int size = 2;
+	 * 			for(int i = 0; i < size; i++) {
+	 * 				count = count + 1;
+	 * 				if(flag) {
+	 * 					int a = 0;
+	 * 				}
+	 *			}
+	 * 		}
+	 * 		catch(RuntimeException ex) {
+	 * 			throw new RuntimeException("FAILLL");
+	 * 		}
+	 * 		return count;
+	 * 	}
+	 */
 	private void processTrys2()
 	{
 		for (Node node : nodesByPc.values())
@@ -318,7 +338,7 @@ public class ControlFlowGraph extends Graph
 	public Block reduce()
 	{
 		processTrys();
-		processTrys2();
+//		processTrys2(); // TODO Fix bug where the loop never ends with try catch. Code is on top of method
 
 		dump("Before Shortcuts");
 		processShortcuts();
