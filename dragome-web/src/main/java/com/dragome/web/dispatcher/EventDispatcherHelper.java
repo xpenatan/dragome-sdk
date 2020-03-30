@@ -48,8 +48,6 @@ public class EventDispatcherHelper
 		{
 			WebServiceLocator.getInstance().setClientSideEnabled(true);
 
-			ServiceLocator.getInstance().setConfigurator(getConfigurator());
-
 			ParametersHandler parametersHandler= ServiceLocator.getInstance().getParametersHandler();
 
 			String className= parametersHandler.getParameter("class");
@@ -65,7 +63,9 @@ public class EventDispatcherHelper
 					{
 						boolean isUnique= annotationEntries.size() == 1;
 						boolean urlContainsAlias= requestURL.contains(annotationEntry.getAnnotationValue());
-						boolean isAliasKey= annotationEntry.getAnnotationKey().split(":")[4].equals("alias");
+						String annotationKey = annotationEntry.getAnnotationKey();
+						String[] split = annotationKey.split(":");
+						boolean isAliasKey= split[4].equals("alias");
 
 						if (isUnique || (isAliasKey && urlContainsAlias))
 							className= annotationEntry.getType().getName();
@@ -97,20 +97,6 @@ public class EventDispatcherHelper
 			}
 		}
 		return className;
-	}
-
-	private static DragomeConfigurator getConfigurator()
-	{
-		DragomeConfigurator configurator = null;
-		List<AnnotationEntry> annotationEntries= AnnotationsHelper.getAnnotationsByType(DragomeConfiguratorImplementor.class).getEntries();
-		for (AnnotationEntry annotationEntry : annotationEntries)
-		{
-			if (!annotationEntry.getType().equals(DomHandlerApplicationConfigurator.class))
-				configurator= ServiceLocator.getInstance().getReflectionService().createClassInstance((Class<? extends DragomeConfigurator>) annotationEntry.getType());
-		}
-		if(configurator == null)
-			configurator = new DomHandlerApplicationConfigurator();
-		return configurator;
 	}
 
 	private static void launch(String className) throws Exception

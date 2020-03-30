@@ -75,6 +75,10 @@ public class Merge extends Transformation
 
 		graph.rollOut(header, labeledBlock);
 		graph.rollOut(tail, block);
+		if(block.nodeID == 2291) {
+//		if(block.nodeID == 2298) {
+//			System.out.println();
+		}
 		block.appendChildren(newNode.block);
 	}
 

@@ -123,7 +123,8 @@ public class DragomeCompilerLauncher
 			}
 			if (configurator.isRemoveUnusedCode())
 			{
-				file= executeProguard(file, "/proguard.conf", "-proguard.jar", configurator.getAdditionalCodeKeepConfigFile(), false);
+				List<URL> additionalCodeKeepConfigFile = configurator.getAdditionalCodeKeepConfigFile();
+				file= executeProguard(file, "/proguard.conf", "-proguard.jar", additionalCodeKeepConfigFile, false);
 				file.deleteOnExit();
 			}
 			if (configurator.isObfuscateCode())

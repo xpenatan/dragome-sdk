@@ -4,8 +4,11 @@
  */
 package com.dragome.compiler.graph;
 
+import com.dragome.compiler.ast.IDHelper;
+
 public class Edge
 {
+	public long edgeID;
 
 	private Graph graph;
 
@@ -19,6 +22,7 @@ public class Edge
 
 	Edge(Graph theGraph, Node theSource, Node theTarget)
 	{
+		edgeID = IDHelper.generateID();
 		graph= theGraph;
 		source= theSource;
 		target= theTarget;
@@ -61,6 +65,7 @@ public class Edge
 		String s= getClass().getName();
 
 		s= s.substring(s.lastIndexOf('.') + 1);
+		s+= " [ID: " + edgeID + "] ";
 		return s + " " + source.getId() + " -> " + target.getId();
 	}
 

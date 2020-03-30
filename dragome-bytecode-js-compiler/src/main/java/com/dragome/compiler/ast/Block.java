@@ -3,6 +3,7 @@ package com.dragome.compiler.ast;
 import org.w3c.dom.DOMException;
 
 import com.dragome.compiler.generators.AbstractVisitor;
+import com.dragome.compiler.parser.Pass1;
 import com.dragome.compiler.utils.Log;
 
 public class Block extends ASTNode
@@ -10,7 +11,7 @@ public class Block extends ASTNode
 
 	public static int TAG= 0;
 
-	private String label;
+	public String label;
 
 	private ASTNode firstChild= null;
 
@@ -21,11 +22,21 @@ public class Block extends ASTNode
 	public Block()
 	{
 		super();
+
+		if(Pass1.LOOPTEST) {
+			int i = 0;
+			i++;
+		}
 	}
 
 	public Block(int theBeginIndex)
 	{
 		setBeginIndex(theBeginIndex);
+
+		if(Pass1.LOOPTEST) {
+			int i = 0;
+			i++;
+		}
 	}
 
 	public Block(int theBeginIndex, int theEndIndex)
@@ -64,6 +75,11 @@ public class Block extends ASTNode
 		{
 			throw new RuntimeException("Illegal null parameters");
 		}
+
+//		if(begin == end) {
+//			Log.getLogger().debug("Appending Children " + begin + " to " + this);
+//		}
+
 		if (begin.getParentBlock() != null)
 			(begin.getParentBlock()).removeChildren(begin, end);
 
@@ -142,6 +158,14 @@ public class Block extends ASTNode
 
 	public ASTNode appendChild(ASTNode newChild)
 	{
+		if(newChild.nodeID == 2287) {
+//			System.out.println();
+		}
+		String vall = newChild.toString();
+		if(vall.contains("BreakStatement")) {
+			newChild.toString();
+//			System.out.println();
+		}
 		Log.getLogger().debug("Appending " + newChild + " to " + this);
 
 		unlink(newChild);
@@ -326,6 +350,18 @@ public class Block extends ASTNode
 
 	private void setLastChildInternal(ASTNode newLastChild)
 	{
+
+		Log.getLogger().debug("SetLastChild " + newLastChild + " to " + this);
+
+//		if(nodeID == 2278 && newLastChild == null)
+//			System.out.println();
+//		if(nodeID == 2278 && newLastChild.nodeID == 2287)
+//			System.out.println();
+//		if(nodeID == 2207 && newLastChild.nodeID == 2294)
+//			System.out.println();
+//
+//		if(nodeID == 2291 && newLastChild.nodeID == 2287)
+//			System.out.println();
 		lastChild= newLastChild;
 		if (lastChild != null)
 		{
@@ -365,4 +401,22 @@ public class Block extends ASTNode
 			label= "L" + (++TAG);
 		return label;
 	}
+
+	public String toString()
+	{
+		StringBuilder sb= new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		String strLabel = label != null ? " [" + label + "]" : " ";
+		sb.append(strLabel + "[NodeID: " + nodeID + "] ");
+		if (getBeginIndex() != Integer.MAX_VALUE)
+		{
+			sb.append("[");
+			sb.append(getBeginIndex());
+			sb.append(", ");
+			sb.append(getEndIndex());
+			sb.append("]");
+		}
+		return sb.toString();
+	}
+
 }

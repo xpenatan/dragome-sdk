@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 Fernando Petrola
- * 
+ *
  * This file is part of Dragome SDK.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
@@ -343,7 +343,7 @@ public class Pass1
 		try
 		{
 			Optimizer optimizer= new Optimizer(methodDecl, tempDecls);
-			optimizer.optimize();
+//			optimizer.optimize();
 		}
 		catch (Error e)
 		{
@@ -365,7 +365,17 @@ public class Pass1
 		}
 		else
 		{
+			if(method.toString().contains("loopTest")) {
+				LOOPTEST = true;
+			}
+
 			block= graph.reduce();
+
+
+			if(method.toString().contains("loopTest")) {
+				LOOPTEST = false;
+			}
+
 		}
 
 		methodDecl.setBody(block);
@@ -577,9 +587,13 @@ public class Pass1
 		logger.debug("... Merging stacks");
 	}
 
+
+	public static boolean LOOPTEST = false;
+
 	public void parseStatement() throws IOException
 	{
 		depth= 0;
+
 
 		while (bytes.available() > 0)
 		{
@@ -745,6 +759,10 @@ public class Pass1
 			{
 				stack.push(stmt);
 			}
+		}
+
+		if(method.toString().contains("loopTest")) {
+//			LOOPTEST = false;
 		}
 
 	}

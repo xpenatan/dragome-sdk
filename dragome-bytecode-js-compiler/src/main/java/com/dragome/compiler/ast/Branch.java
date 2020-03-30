@@ -34,7 +34,7 @@ public class Branch extends Expression
 
 	public String toString()
 	{
-		String s= getClass().getName() + "[" + getBeginIndex() + ", " + getEndIndex() + ", " + targetIndex + "] -> ";
+		String s= getClass().getName() + " [" + label +  "][NodeID: " + nodeID + "] " + "[" + getBeginIndex() + ", " + getEndIndex() + ", " + targetIndex + "] -> ";
 		if (target != null)
 		{
 			Exception e= new Exception();

@@ -60,13 +60,13 @@ allprojects {
         }
     }
 
-    eclipse {
-        classpath {
-            defaultOutputDir = file('build/classes/java/main')
-        }
-    }
+//    eclipse {
+//        classpath {
+//            defaultOutputDir = file('build/classes/java/main')
+//        }
+//    }
 }
-
+//
 gradle.taskGraph.whenReady { graph ->
     graph.getAllTasks().each { task ->
         // skip test

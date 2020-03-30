@@ -154,6 +154,8 @@ public class ControlFlowGraph extends Graph
 		for (int i= 0; i < tryStatements.size(); i++)
 		{
 			TryStatement stmt= (TryStatement) tryStatements.get(i);
+			if(stmt.nodeID == 2206)
+				System.out.println();
 			TryHeaderNode header= stmt.header;
 			Node tryNode= header.getTryBody();
 
@@ -185,8 +187,13 @@ public class ControlFlowGraph extends Graph
 		for (Node node : nodesByPc.values())
 		{
 			TryStatement sourceTry= selectTryStatement(node);
+
 			if (sourceTry == null)
 				continue;
+			if(sourceTry.nodeID == 2206) {
+
+				System.out.println();
+			}
 
 			for (Edge edge : node.getOutEdges())
 			{
@@ -208,6 +215,8 @@ public class ControlFlowGraph extends Graph
 		for (int i= 0; i < tryStatements.size(); i++)
 		{
 			TryStatement stmt= (TryStatement) tryStatements.get(i);
+			if(stmt.nodeID == 2206)
+				System.out.println();
 			TryHeaderNode header= stmt.header;
 			Node finallyNode= header.getFinallyNode();
 			if (finallyNode == null)
@@ -318,7 +327,7 @@ public class ControlFlowGraph extends Graph
 	public Block reduce()
 	{
 		processTrys();
-		processTrys2();
+//		processTrys2();
 
 		dump("Before Shortcuts");
 		processShortcuts();

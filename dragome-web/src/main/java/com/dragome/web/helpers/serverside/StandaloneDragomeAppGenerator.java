@@ -126,7 +126,7 @@ public class StandaloneDragomeAppGenerator
 		}
 	}
 
-	private void compile() throws Exception
+	public void compile() throws Exception
 	{
 		System.setProperty("dragome-compile-mode", "release");
 
@@ -184,7 +184,7 @@ public class StandaloneDragomeAppGenerator
 		//		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		CopyUtils.copyFilesOfFolder(webappDirectory, theTargetDir);
 
-		if (compress) 
+		if (compress)
 		{
 			theProcessor.process(new FileReader(dest), new FileWriter(targetFile));
 			dest.delete();

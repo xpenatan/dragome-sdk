@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dragome.commons.DragomeConfiguratorImplementor;
 import com.dragome.commons.compiler.classpath.ClasspathFile;
+//import com.dragome.compiler.utils.Log;
 import com.dragome.web.config.DomHandlerApplicationConfigurator;
 import com.dragome.web.helpers.DefaultClasspathFileFilter;
 
@@ -26,11 +27,13 @@ public class TestsConfigurator extends DomHandlerApplicationConfigurator
 				return flag;
 			}
 		});
+
+//		Log.getLogger().setState(Log.DEBUG);
 	}
 
 	public boolean isRemoveUnusedCode()
 	{
-		return true;
+		return false;
 	}
 
 	@Override

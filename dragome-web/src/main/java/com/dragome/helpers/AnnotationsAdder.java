@@ -32,7 +32,8 @@ public class AnnotationsAdder
 	{
 		try
 		{
-			WebServiceLocator.getInstance().setClientSideEnabled(true);
+			WebServiceLocator instance = WebServiceLocator.getInstance();
+			instance.setClientSideEnabled(true);
 			Class<?> type= ServiceLocator.getInstance().getReflectionService().forName(className);
 			Class<? extends Annotation> annotationClass= (Class<? extends Annotation>) ServiceLocator.getInstance().getReflectionService().forName(annotationClassName);
 

@@ -74,8 +74,24 @@ public abstract class Generator extends AbstractVisitor
 		print(indents[depth]);
 	}
 
+	boolean flag = false;
+	boolean flag2 = false;
 	void print(String s)
 	{
+		if(s.contains("PASSAA")) {
+			flag = true;
+		}
+
+		if(flag) {
+
+
+			if(s.contains("L2")) {
+				flag2 = true;
+			}
+//			if(flag2)
+//				System.out.println(s);
+		}
+
 		stream.print(s);
 		if (s.length() > 0)
 			lastChar= s.charAt(s.length() - 1);

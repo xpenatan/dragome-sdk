@@ -442,7 +442,15 @@ public class Parser
 
 		try
 		{
-			pass1.parse(method, methodDecl);
+			if(method.toString().contains("loopTest")) {
+				int dd =0;
+				dd++;
+				Log.getLogger().setState(Log.DEBUG);
+				pass1.parse(method, methodDecl);
+				Log.getLogger().setState(Log.INFO);
+			}
+			else
+				pass1.parse(method, methodDecl);
 		}
 		catch (Throwable ex)
 		{

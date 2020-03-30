@@ -4,6 +4,7 @@ import com.dragome.compiler.generators.AbstractVisitor;
 
 public class ASTNode
 {
+	public long nodeID;
 
 	public static final int BEFORE= 0;
 
@@ -30,11 +31,26 @@ public class ASTNode
 	public ASTNode()
 	{
 		super();
+		setID();
 	}
 
 	public ASTNode(int theBeginIndex, int theEndIndex)
 	{
+		setID();
 		setRange(theBeginIndex, theEndIndex);
+	}
+
+	private void setID() {
+		nodeID = IDHelper.generateID();
+
+		if(nodeID == 38220) { // block
+//			if(nodeID == 6163) { // block
+			System.out.println();
+		}
+
+		if(nodeID == 2278) { // parent  2278
+//			System.out.println();
+		}
 	}
 
 	public int getStackDelta()
@@ -134,6 +150,7 @@ public class ASTNode
 	{
 		StringBuilder sb= new StringBuilder();
 		sb.append(getClass().getSimpleName());
+		sb.append(" [NodeID: " + nodeID + "] ");
 		if (getBeginIndex() != Integer.MAX_VALUE)
 		{
 			sb.append("[");

@@ -710,7 +710,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (signature.isArrayType())
 			normalizeExpression= "\"" + normalizeExpression + "\"";
 
-		print(normalizeExpression); 
+		print(normalizeExpression);
 		print(")");
 	}
 

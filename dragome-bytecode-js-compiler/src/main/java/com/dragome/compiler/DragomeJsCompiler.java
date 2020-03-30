@@ -163,6 +163,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			if (logger == null)
 			{
 				setLogger(new Log());
+//				logger.setState(Log.DEBUG);
 			}
 
 			for (Assembly assembly : assemblies)
@@ -251,9 +252,11 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 		Collection<ClasspathFile> classpathFiles= fileManager.getAllFilesInClasspath();
 		for (ClasspathFile file : classpathFiles)
 		{
-			if (file.getPath().contains(".class"))
+			String path = file.getPath();
+			if (path.contains(".class"))
 			{
 				String className= getClassname(file);
+//				logger.info("\nCreate Class Unit: " + className + "\n");
 				assembly.getProject().createClassUnit(className, file);
 			}
 		}
@@ -263,7 +266,58 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			if (file.getPath().contains(".class"))
 			{
 				String className= getClassname(file);
+				if(className.contains("MyClassTest") ) {
+//					logger.setState(Log.DEBUG);
+					logger.info("\nResolve No Tainting: " + className + "\n");
+				}
+//				if(className.contains("MyClassTest") ||
+//						className.contains("java.lang.String") ||
+//						className.contains("java.io.PrintStream") ||
+//						className.contains("com.dragome.commons.javascript.ConsoleOutputStream") ||
+//						className.contains("java.lang.System") ||
+//						className.contains("java.util.HashMap") ||
+//						className.contains("EventDispatcherHelsper") ||
+//						className.contains("AnnotationsAdder") ||
+//						className.contains("com.dragome.services.WebServiceLocator") ||
+//						className.contains("com.dragome.web.services.BrowserParametersHandler") ||
+//						className.contains("com.dragome.services.ServiceLocator") ||
+//						className.contains("com.dragome.services.serialization.FlexJsonSerialization") ||
+//						className.contains("flexjson.JSONSerializer") ||
+//						className.contains("flexjson.transformer.TypeTransformerMap") ||
+//						className.contains("flexjson.") ||
+//						className.contains("java.lang.Boolean") ||
+//						className.contains("java.lang.Integer") ||
+//						className.contains("java.util.List") ||
+//						className.contains("java.util.ArrayList") ||
+//						className.contains("java.util.Calendar") ||
+//						className.contains("java.util.TimeZone") ||
+//						className.contains("java.util.Date") ||
+//						className.contains("java.lang.Class") ||
+//						className.contains("com.dragome.commons.javascript.JSObject") ||
+//						className.contains("java.util.logging.Logger") ||
+//						className.contains("java.util.logging.Level") ||
+////						className.contains("WebServiceLocator") ||
+//						className.contains("java.lang.Long") ||
+//						className.contains("java.lang.Double") ||
+//						className.contains("java.lang.Float") ||
+//						className.contains("java.lang.Character") ||
+//						className.contains("java.lang.Void") ||
+//						className.contains("java.util.Collections") ||
+//						className.contains("com.dragome.services.serialization.ElementTrasformer") ||
+//						className.contains("com.dragome.services.serialization.MethodTrasformer") ||
+//						className.contains("com.dragome.services.serialization.DragomeClassTransformer") ||
+//						className.contains("org.w3c.dom.Element") ||
+//						className.contains("java.lang.reflect.Method") ||
+//						className.contains("com.dragome.services.serialization.MethodFactory") ||
+//						className.contains("com.dragome.services.serialization.DragomeClassFactory") ||
+//						className.contains("javascript.Utils")
+//						)
 				assembly.resolveNoTainting(className, file);
+
+				if(className.contains("MyClassTest") ) {
+					logger.setState(Log.WARN);
+					logger.info("\nResolve No Tainting: " + className + "\n");
+				}
 			}
 		}
 

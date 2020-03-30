@@ -1,6 +1,7 @@
 package com.dragome.compiler.graph;
 
 import com.dragome.compiler.ast.BooleanExpression;
+import com.dragome.compiler.parser.Pass1;
 
 public class ConditionalEdge extends Edge
 {
@@ -26,11 +27,20 @@ public class ConditionalEdge extends Edge
 
 	public boolean isNegate()
 	{
+
+		if(Pass1.LOOPTEST) {
+			int i = 0;
+			i++;
+		}
 		return negate;
 	}
 
 	public void setNegate(boolean theNegate)
 	{
+		if(Pass1.LOOPTEST) {
+			int i = 0;
+			i++;
+		}
 		negate= theNegate;
 	}
 }

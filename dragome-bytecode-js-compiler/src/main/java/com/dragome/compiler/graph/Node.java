@@ -134,6 +134,8 @@ public class Node
 			s+= " dominated by " + domParent.id;
 		if (isLoopHeader())
 			s+= " LH";
+
+		s+= " [NodeID: " + block.nodeID + "]";
 		return s;
 	}
 
