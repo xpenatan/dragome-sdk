@@ -91,12 +91,10 @@ public class DragomeApplicationLauncher
 						if (!WebServiceLocator.getInstance().isMethodVoid(serviceInvocation.getMethod()))
 						{
 							applicationExecutor.pushResult(new ServiceInvocationResult(serviceInvocation, result));
-//							System.out.println("response message: " + responseMessagesCounter++);
 						}
 					}
 					catch (Exception e)
 					{
-						//			    applicationExecutor.pushException(new DragomeJsException(e, e.getMessage()));
 						applicationExecutor.pushResult(new ServiceInvocationResult(serviceInvocation, new DragomeJsException(e, "Execution failed in browser: " + e.getMessage())));
 					}
 				}
@@ -112,17 +110,9 @@ public class DragomeApplicationLauncher
 		{
 			public void run()
 			{
-				Executor executor= ServiceLocator.getInstance().getConfigurator().getExecutionHandler().getExecutor();
-				executor.execute(new Runnable()
-				{
-					public void run()
-					{
-						applicationExecutor.executeByClassName(typeName);
-					}
-				});
+				applicationExecutor.executeByClassName(typeName);
 			}
 		};
-
 		EventDispatcherHelper.runApplication(runnable);
 	}
 }

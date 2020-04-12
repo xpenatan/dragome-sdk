@@ -126,7 +126,7 @@ public class StandaloneDragomeAppGenerator
 		}
 	}
 
-	private void compile() throws Exception
+	public void compile() throws Exception
 	{
 		System.setProperty("dragome-compile-mode", "release");
 
@@ -184,7 +184,7 @@ public class StandaloneDragomeAppGenerator
 		//		Files.copy(theWebAppJS.toPath(), new File(theTargetDir, "webapp-1.js").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		CopyUtils.copyFilesOfFolder(webappDirectory, theTargetDir);
 
-		if (compress) 
+		if (compress)
 		{
 			theProcessor.process(new FileReader(dest), new FileWriter(targetFile));
 			dest.delete();
@@ -206,17 +206,23 @@ public class StandaloneDragomeAppGenerator
 
 	public void execute()
 	{
+		execute(true);
+	}
+
+	public void execute(boolean wro4jStandalone)
+	{
 		try
 		{
 			LOGGER.info("Generating Dragome Client Application at " + destinationDirectory);
 
 			copyResources();
 			compile();
-
-			WroConfiguration wroConfiguration= new DragomeWro4jConfigurationObjectFactory().create();
-			DragomeWroManagerFactory managerFactory= new DragomeWroManagerFactory(destinationDirectory);
-			Wro4jStandaloneRunner wro4jStandaloneRunner= new Wro4jStandaloneRunner(wroConfiguration, managerFactory, new File(destinationDirectory, "/dragome"));
-			wro4jStandaloneRunner.process();
+			if(wro4jStandalone) {
+				WroConfiguration wroConfiguration= new DragomeWro4jConfigurationObjectFactory().create();
+				DragomeWroManagerFactory managerFactory= new DragomeWroManagerFactory(destinationDirectory);
+				Wro4jStandaloneRunner wro4jStandaloneRunner= new Wro4jStandaloneRunner(wroConfiguration, managerFactory, new File(destinationDirectory, "/dragome"));
+				wro4jStandaloneRunner.process();
+			}
 		}
 		catch (Exception e)
 		{
