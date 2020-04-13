@@ -42,7 +42,7 @@ public class EventDispatcherHelper
 	}
 
 	@MethodAlias(alias= "EventDispatcher.executeMainClass")
-	public static void executeMainClass() throws Exception
+	public static void executeMainClass(String className) throws Exception
 	{
 		try
 		{
@@ -50,7 +50,8 @@ public class EventDispatcherHelper
 
 			ParametersHandler parametersHandler= ServiceLocator.getInstance().getParametersHandler();
 
-			String className= parametersHandler.getParameter("class");
+			if(className == null || className.trim().length() == 0)
+				className= parametersHandler.getParameter("class");
 			if (className == null || className.trim().length() == 0)
 			{
 				String requestURL= parametersHandler.getRequestURL();

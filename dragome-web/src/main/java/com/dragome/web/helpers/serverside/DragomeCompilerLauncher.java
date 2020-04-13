@@ -38,7 +38,6 @@ import com.dragome.commons.compiler.classpath.ClasspathFileFilter;
 import com.dragome.commons.compiler.classpath.serverside.JarClasspathEntry;
 import com.dragome.services.ServiceLocator;
 import com.dragome.services.WebServiceLocator;
-import com.dragome.view.VisualActivity;
 import com.dragome.web.helpers.DefaultClasspathFileFilter;
 
 import proguard.Configuration;
@@ -54,7 +53,7 @@ public class DragomeCompilerLauncher
 	{
 		ServiceLocator serviceLocator= ServiceLocator.getInstance();
 		DragomeConfigurator configurator= serviceLocator.getConfigurator();
-		String mainClassName= VisualActivity.class.getName();
+		String mainClassName= configurator.mainClassName();
 		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
 		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
 

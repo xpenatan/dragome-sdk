@@ -15,6 +15,8 @@
  */
 package com.dragome.web.execution;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -60,8 +62,14 @@ public class DragomeApplicationLauncher
 
 			public void execute(Class<?> type)
 			{
-				VisualActivity visualActivity= (VisualActivity) ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
-				visualActivity.onCreate();
+				Object mainClassInstance = ServiceLocator.getInstance().getReflectionService().createClassInstance(type);
+				try {
+					Method method = mainClassInstance.getClass().getMethod("main", String[].class);
+					String[] params = null; // init params accordingly
+					method.invoke(null, (Object) params); // static method doesn't have an instance
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
 			}
 
 			public void pushException(DragomeJsException exception)

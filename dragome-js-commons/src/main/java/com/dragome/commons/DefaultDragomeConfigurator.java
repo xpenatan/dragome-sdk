@@ -181,4 +181,9 @@ public class DefaultDragomeConfigurator implements DragomeConfigurator
 	{
 		return false;
 	}
+
+	@Override
+	public String mainClassName() {
+		return null;
+	}
 }

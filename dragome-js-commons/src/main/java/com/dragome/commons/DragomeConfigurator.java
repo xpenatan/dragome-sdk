@@ -43,4 +43,5 @@ public interface DragomeConfigurator
 	List<URL> getAdditionalCodeKeepConfigFile();
 	List<URL> getAdditionalObfuscateCodeKeepConfigFile();
 	public boolean isFailOnError();
+	public String mainClassName();
 }

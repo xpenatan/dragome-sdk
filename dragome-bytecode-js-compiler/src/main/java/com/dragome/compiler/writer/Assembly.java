@@ -255,7 +255,10 @@ public class Assembly
 		//	writer.write("new " + mainClass + "();\n");
 		//	writer.write(mainClass + "." + mainMethod + "();\n");
 
-		writer.write("onReady(function(){setupCheckCast(); _ed.executeMainClass();});");
+		String mainClass = "";
+		mainClass =	"\"" + entryPointClassName + "\"";
+
+		writer.write("onReady(function(){setupCheckCast(); _ed.executeMainClass(" + mainClass + ");});");
 
 		writer.close();
 

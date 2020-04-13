@@ -128,7 +128,8 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 			compiler.addAssembly(assembly);
 			compiler.setGenerateLineNumbers(false);
 			compiler.setCompression(false);
-			logger = Log.logger;
+			logger = Log.getLogger();
+			logger.setState(Log.INFO);
 			initialized= true;
 		}
 	}
@@ -187,7 +188,7 @@ public class DragomeJsCompiler implements BytecodeToJavascriptCompiler
 
 		DragomeJsCompiler.compiler= this;
 
-		logger.debug("Entry point is " + assembly.getEntryPointClassName() + "#main(java.lang.String[])void");
+		logger.info("Entry point is " + assembly.getEntryPointClassName() + "#main(java.lang.String[])void");
 
 		if (assembly.getEntryPointClassName() == null)
 		{
