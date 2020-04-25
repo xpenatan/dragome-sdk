@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Logger;
 
+import com.dragome.view.VisualActivity;
 import org.apache.commons.io.FileUtils;
 
 import com.dragome.commons.DragomeConfigurator;
@@ -53,7 +54,9 @@ public class DragomeCompilerLauncher
 	{
 		ServiceLocator serviceLocator= ServiceLocator.getInstance();
 		DragomeConfigurator configurator= serviceLocator.getConfigurator();
-		String mainClassName= configurator.mainClassName();
+		String mainClassName = configurator.mainClassName();
+		if(mainClassName == null)
+			mainClassName = VisualActivity.class.getName();
 		CompilerType defaultCompilerType= configurator.getDefaultCompilerType();
 		BytecodeTransformer bytecodeTransformer= configurator.getBytecodeTransformer();
 
