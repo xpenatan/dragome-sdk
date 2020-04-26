@@ -327,6 +327,14 @@ dragomeJs.checkCast = function(obj, className) {
 		if (typeof obj == "string")
 			cn = "java_lang_String";
 
+        var containsDelegate = cn.includes("Delegate");
+        var isClassNameInterface = className.$$type.includes("Interface");
+
+        if(containsDelegate && isClassNameInterface) {
+            var newObj = dragomeJs.castTo(obj, className.name);
+            return newObj;
+        }
+
 		throw dragomeJs.createException("java.lang.RuntimeException",
 				"Cannot cast " + cn + " to " + className.basename);
 	}
