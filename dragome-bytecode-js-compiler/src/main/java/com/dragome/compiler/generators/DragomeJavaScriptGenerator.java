@@ -666,9 +666,26 @@ public class DragomeJavaScriptGenerator extends Generator
 			print("dragomeJs.trunc(");
 		}
 
+		boolean isDelegateClass = false;
+		String leftVariableClass = getVariablClass(left);
+		String rightVariableClass = getVariablClass(right);
+		if(leftVariableClass != null && rightVariableClass != null) {
+			String leftDelegate = convertToDelegate(leftVariableClass);
+			String rightDelegate = convertToDelegate(rightVariableClass);
+
+			ClassUnit leftClassUnit = Project.getSingleton().getClassUnit(leftDelegate);
+			ClassUnit rightClassUnit = Project.getSingleton().getClassUnit(rightDelegate);
+			if(leftClassUnit != null && rightClassUnit != null) {
+				isDelegateClass = true;
+			}
+		}
+
 		bracket(left, op);
-		//		boolean leftIsObject= ObjectType.class.isAssignableFrom(left.getTypeBinding().getClass());
-		//		boolean rightIsObject= ObjectType.class.isAssignableFrom(right.getTypeBinding().getClass());
+
+		if(isDelegateClass) {
+			print(".node");
+		}
+
 		//		boolean isEqualOrNotEqual= op.toString().equals("==") || op.toString().equals("!=");
 		//
 		//		if ((leftIsObject && rightIsObject) && isEqualOrNotEqual)
@@ -677,11 +694,55 @@ public class DragomeJavaScriptGenerator extends Generator
 		print(" " + op + " ");
 
 		bracket(right, op);
+		if(isDelegateClass) {
+			print(".node");
+		}
 
 		if (isTruncate)
 		{
 			print(")");
 		}
+	}
+
+	private String convertToDelegate(String originalClass) {
+		String[] split = originalClass.split("\\.");
+		String className = split[split.length-1];
+		String delegateClass = "";
+
+		for(int i = 0; i < split.length-1;i++) {
+			delegateClass += split[i] + ".";
+		}
+
+		delegateClass += "Delegate" + className;
+
+		return delegateClass;
+	}
+
+	private String getVariablClass(Expression expression) {
+
+		String className = null;
+		if(expression instanceof VariableBinding) {
+			VariableBinding expressionBinding = (VariableBinding)expression;
+			VariableDeclaration variableDeclaration = expressionBinding.getVariableDeclaration();
+			Expression parentAssignment = variableDeclaration.parentAssignment;
+			if(parentAssignment != null) {
+				if(parentAssignment instanceof MethodInvocation) {
+					MethodInvocation methodInvocation = (MethodInvocation)parentAssignment;
+					className = methodInvocation.getMethodBinding().getReturnType().toString();
+				}
+				else if(parentAssignment instanceof CastExpression) {
+					CastExpression castExpression = (CastExpression)parentAssignment;
+					className = castExpression.getTypeBinding().toString();
+				}
+				else if(parentAssignment instanceof FieldRead) {
+					FieldRead fieldRead = (FieldRead)parentAssignment;
+					className = fieldRead.getFieldType().toString();
+				}
+			}
+
+		}
+
+		return className;
 	}
 
 	public void visit(ConditionalExpression ce)
@@ -710,7 +771,7 @@ public class DragomeJavaScriptGenerator extends Generator
 		if (signature.isArrayType())
 			normalizeExpression= "\"" + normalizeExpression + "\"";
 
-		print(normalizeExpression); 
+		print(normalizeExpression);
 		print(")");
 	}
 
@@ -776,8 +837,14 @@ public class DragomeJavaScriptGenerator extends Generator
 				return;
 			}
 		}
+		Expression leftHandSide = a.getLeftHandSide();
 
-		a.getLeftHandSide().visit(this);
+		if(leftHandSide instanceof VariableBinding) {
+			VariableBinding leftHandSideBinding = (VariableBinding)leftHandSide;
+			VariableDeclaration variableDeclaration = leftHandSideBinding.getVariableDeclaration();
+			variableDeclaration.parentAssignment = rhs;
+		}
+		leftHandSide.visit(this);
 		print(" " + a.getOperator() + " ");
 		if (VariableBinding.isBoolean(a.getLeftHandSide()))
 		{

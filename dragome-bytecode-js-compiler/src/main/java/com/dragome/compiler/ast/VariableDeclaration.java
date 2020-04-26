@@ -30,6 +30,8 @@ public class VariableDeclaration extends ASTNode
 
 	public List<VariableBinding> vbs= new ArrayList<VariableBinding>();
 
+	public Expression parentAssignment;
+
 	public static String getLocalVariableName(Method method, int slot, int pc)
 	{
 		if (method.getLocalVariableTable() != null)
